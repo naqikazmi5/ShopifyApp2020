@@ -1,0 +1,540 @@
+﻿@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Contact</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C700&amp;subset=latin&amp;ver=1.8.7" type="text/css" media="all">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        body, h1, h2, h3, h4, h5, h6, p, span, article, fieldset, section {
+            font-family: "Roboto", sans-serif;
+        }
+
+        .row {
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 4.375rem;
+            margin-top: 2rem;
+            font-weight: lighter;
+        }
+
+        h3 {
+            font-size: 2.9375rem;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            font-weight: lighter;
+        }
+
+        h4 {
+            font-size: 2.1875rem;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            font-weight: lighter;
+        }
+
+        ul {
+            margin-left: 1.75rem;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            list-style-position: outside;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        .site-header {
+            background-color: white;
+            letter-spacing: -.01em;
+            padding: 0;
+            position: relative;
+        }
+
+        .site-title-wrapper {
+            float: left;
+            padding: 23px;
+        }
+
+        .main-navigation-container {
+            float: right;
+            background-color: #ffffff;
+        }
+
+        .main-navigation ul {
+            list-style: none;
+            margin: 0;
+            padding-left: 0;
+        }
+
+        .main-navigation a {
+            display: block;
+            text-decoration: none;
+            padding: 5px 0px 5px 10px;
+            color: #181818;
+            border-bottom: transparent 2px solid;
+        }
+
+        .menu-toggle {
+            width: 4.55rem;
+            padding: 0.6rem;
+            cursor: pointer;
+            outline: none;
+            position: absolute;
+            top: -68px;
+            right: 0;
+            display: block;
+            padding: 0 9px 24px 0;
+            z-index: 99999;
+        }
+
+            .menu-toggle div {
+                background-color: #252525;
+            }
+
+            .menu-toggle div {
+                background-color: #181818;
+                margin: 0.43rem .86rem 0.43rem 0;
+                -webkit-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+                -webkit-transition: .15s ease-in-out;
+                transition: .15s ease-in-out;
+                -webkit-transform-origin: left center;
+                -ms-transform-origin: left center;
+                transform-origin: left center;
+                height: 0.32rem;
+            }
+
+            .menu-toggle.open div:nth-child(1) {
+                -webkit-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                transform: rotate(45deg);
+                width: 25px;
+            }
+
+            .menu-toggle.open div:nth-child(2) {
+                width: 0%;
+                opacity: 0;
+            }
+
+            .menu-toggle.open div:nth-child(3) {
+                -webkit-transform: rotate(-45deg);
+                -ms-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+                width: 25px;
+                margin: 0;
+                margin-top: 7px;
+            }
+
+        .hero {
+            background-image: url(https://secureservercdn.net/45.40.144.60/gxc.552.myftpupload.com/wp-content/uploads/2018/06/qtq80-F5gnnM-2163x1300.jpeg);
+        }
+
+        .hero {
+            -webkit-background-size: cover;
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+        }
+
+        .hero {
+            -webkit-box-shadow: inset 0 0 0 9999em;
+            -moz-box-shadow: inset 0 0 0 9999em;
+            box-shadow: inset 0 0 0 9999em;
+            color: rgba(245, 245, 245, 0.75);
+        }
+
+        .page-header {
+            padding-bottom: 0;
+            margin: 0;
+            border-bottom: 0;
+        }
+
+            .page-header .page-title {
+                margin: 1em .5em;
+                text-align: center;
+            }
+
+        .hero .page-header h1 {
+            color: #252525;
+        }
+
+        .hero .hero-inner {
+            padding: 5%;
+        }
+
+
+        #content {
+            padding: 20px 25px;
+        }
+        .ContactForm{
+            padding-top:40px;
+            padding-bottom:40px;
+        }
+        .ContactForm h3{
+            line-height: 1.8;
+        }
+        .ContactForm p {
+            line-height: 2.4;
+        }
+        .ContactForm .form input,
+        .ContactForm .form textarea{
+            background-color: #eaeaea;
+            padding: .75rem;
+        }
+        .ContactForm .button-wrap .button{
+            background-color: #ffc700;
+            border-color: #ffc700;
+            border: none;
+            color: #181818;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -webkit-font-smoothing: auto;
+            font-size: 1rem;
+            line-height: 1;
+            padding: .75rem 0;
+            margin-top:15px;
+            display: inline-block;
+            padding: 9px 15px;
+            border-radius: 5px;
+            text-transform: capitalize;
+        }
+        .fl-cta-wrap {
+            background-image: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url(https://www.ctkusa.com/wp-content/uploads/2018/06/qtq80-3oG0zF.jpeg);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: scroll;
+            background-size: cover;
+            padding: 40px 20px;
+        }
+
+            .fl-cta-wrap .fl-cta-text {
+                display: inline-block;
+                width: 70%;
+                color: #ffffff;
+            }
+
+            .fl-cta-wrap .fl-cta-button {
+                display: inline-block;
+                padding-left: 30px;
+                text-align: center;
+                width: 29%;
+            }
+
+                .fl-cta-wrap .fl-cta-button .fl-button-wrap a {
+                    background-color: #ffc700;
+                    border-color: #ffc700;
+                    color: #252525;
+                    font-size: 16px;
+                    line-height: 16px;
+                    padding: 12px 24px;
+                    -webkit-border-radius: 4px;
+                    border-radius: 4px;
+                    text-align: center;
+                    display: block;
+                    text-shadow: none;
+                    max-width: 300px;
+                }
+
+        .site-info-wrapper {
+            padding: 0;
+            color: #222;
+            line-height: 1.5;
+        }
+
+            .site-info-wrapper .site-info {
+                padding: 2.5rem 2rem;
+            }
+
+        .footer-menu ul {
+            list-style: none;
+            margin: 0 0 5px;
+            padding: 0;
+            text-align: center;
+        }
+
+            .footer-menu ul li {
+                display: inline-block;
+                font-size: .875rem;
+                font-weight: 600;
+                margin: 0 10px;
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+                .footer-menu ul li a {
+                    color: #181818;
+                }
+
+                    .footer-menu ul li a, .footer-menu ul li a:visited {
+                        color: #686868;
+                        font-size: 1.5em;
+                    }
+
+        .social-menu ul {
+            list-style: none;
+            text-align: center;
+            margin: 0 1.25em 0 0;
+            margin: 0 1.25rem 0 0;
+        }
+
+            .social-menu ul li {
+                display: inline-block;
+                position: relative;
+                padding: 0;
+                margin: 3px;
+            }
+
+        .site-info-inner {
+            display: flow-root;
+            padding: 20px 0px;
+        }
+
+            .site-info-inner .site-info-text {
+                color: #686868;
+            }
+
+
+        @@media only screen and (min-width: 40.063em) {
+            .main-navigation li {
+                position: relative;
+                float: left;
+                padding: 2.1em 1em;
+            }
+
+            .footer-menu {
+                float: left;
+            }
+
+            .social-menu {
+                text-align: right;
+                float: right;
+                padding: 0 0 20px;
+            }
+
+            .footer-menu ul {
+                text-align: left;
+            }
+
+            .social-menu {
+                text-align: right;
+                float: right;
+                padding: 0 0 20px;
+            }
+
+            .site-info-inner .site-info-text {
+                text-align: left;
+                float: left;
+                width: 100%;
+                margin-left: 10px;
+            }
+        }
+
+        @@media only screen and (max-width: 40em) {
+            .main-navigation-container {
+                float: none;
+                clear: both;
+                z-index: 9999;
+                position: relative;
+            }
+        }
+
+        @@media only screen and (max-width: 40.063em) {
+            #site-navigation li:hover {
+                background-color: #fafafa;
+            }
+
+            #site-navigation {
+                display: none;
+            }
+
+                #site-navigation.open {
+                    display: block;
+                }
+        }
+
+        @@media screen and (max-width: 900px) {
+            .hero {
+                -webkit-background-size: cover;
+                background-size: cover;
+                min-height: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <header id="masthead" class="site-header" role="banner">
+            <div class="site-header-wrapper">
+                <div class="site-title-wrapper">
+                    <a href="/home/index">
+                        @* <a href="https://logisticsolutionctkusa.azurewebsites.net/Login">*@
+                        <img src="~/images/cropped-mainlogo.png" class="logo" alt="Logistic Solutions">
+                    </a>
+                </div><!-- .site-title-wrapper -->
+                <div class="main-navigation-container">
+                    <div class="menu-toggle" id="menu-toggle" role="button" tabindex="0">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div><!-- #menu-toggle -->
+                    <nav id="site-navigation" class="main-navigation">
+                        <div class="menu-primary-menu-container">
+                            <ul id="menu-primary-menu" class="menu">
+                                <li><a href="/home/about">Who We Are</a></li>
+                                <li><a href="/home/index" aria-current="page">Logistics</a></li>
+                                @*<li><a href="/home/integrationstore" aria-current="page">Integration</a></li>*@
+                                <li><a href="https://www.ctkusa.com/blog/" aria-current="page">Blog</a></li>
+                                <li><a href="https://www.ctkusa.com/contact/">Contact Us</a></li>
+                            </ul>
+                        </div>
+                    </nav><!-- #site-navigation -->
+                </div>
+            </div><!-- .site-header-wrapper -->
+        </header>
+    </div>
+
+    <div class="row">
+        <div class="hero">
+            <div class="hero-inner">
+                <div class="page-title-container">
+                    <header class="page-header">
+                        <h1 class="page-title">Contact Us</h1>
+                    </header><!-- .entry-header -->
+                </div><!-- .page-title-container -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="content">
+
+        <div class="row ContactForm">
+            <div class="col-md-6 col-xs-12">
+                <h3><span style="font-size: 26px;"><strong>Are you ready to find out how we can help your business grow?</strong></span></h3>
+                <p><span style="font-size: 18px;">To get a free Logistics or Marketing consultation, fill out the form, call us at&nbsp;</span><span style="font-size: 18px;">+1 (909) 406-5388, or email us at <a href="mailto:info@ctkusa.com">info@ctkusa.com&nbsp;</a></span></p>
+                <p><img class="size-full wp-image-555 alignleft" src="https://secureservercdn.net/45.40.144.60/gxc.552.myftpupload.com/wp-content/uploads/2018/06/mainlogo.png" alt="" width="325" height="50" srcset="https://secureservercdn.net/45.40.144.60/gxc.552.myftpupload.com/wp-content/uploads/2018/06/mainlogo.png 325w, https://secureservercdn.net/45.40.144.60/gxc.552.myftpupload.com/wp-content/uploads/2018/06/mainlogo-300x46.png 300w" sizes="(max-width: 325px) 100vw, 325px"></p>
+            </div>
+            @*<div class="col-md-6 col-xs-12">
+                <form action="#" method="post" class="form" novalidate="novalidate">
+                    <div class="form-group">
+                        <div class="content-area">
+                            <div class="fl-input-group">
+                                <label>Name (required)</label>
+                                <input type="text" name="f-name" value="" size="40" class="form-control" id="f-name" aria-required="true" aria-invalid="false" placeholder="Your name">
+                            </div>
+                            <div class="fl-input-group">
+                                <label>Website (required)</label>
+                                <input type="url" name="website" value="" size="40" class="form-control" id="website" aria-required="true" aria-invalid="false" placeholder="Your website">
+                            </div>
+                            <div class="fl-input-group">
+                                <label>Email (required)</label>
+                                <input type="email" name="email" value="" size="40" class="form-control" id="email" aria-required="true" aria-invalid="false" placeholder="Your email">
+                            </div>
+                            <div class="fl-input-group">
+                                <label>Average Monthly Order Volume (required)</label>
+                                <input type="text" name="monthly-volume" value="" size="40" class="form-control" id="monthly-volume" aria-required="true" aria-invalid="false" placeholder="Please enter your average monthly order volume">
+                            </div>
+                            <div class="fl-input-group">
+                                <label>Order Type</label>
+                                <select name="order-type" class="form-control" id="order-type" aria-invalid="false"><option value="">---</option><option value="B2C">B2C</option><option value="B2B">B2B</option><option value="Both">Both</option></select>
+                            </div>
+                            <div class="fl-input-group">
+                                <label>Your Message</label>
+                                <textarea name="message" cols="40" rows="10" class="form-control" id="message" aria-required="true" aria-invalid="false" placeholder="Your message"></textarea>
+                            </div>
+                            <div class="button-wrap">
+                                <input type="button" value="Send" class="button" onclick="myFunction()">
+                                <i class="fa fa-refresh fa-spin" aria-hidden="true" id="myDIV" style="display:none"></i>
+                            </div>
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="wpcf7-response-output wpcf7-display-none"></div>
+                </form>
+            </div>*@
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="fl-cta-wrap">
+                <div class="fl-cta-text">
+                    <h3 class="fl-cta-title">Ready to find out more?</h3>
+                    <div class="fl-cta-text-content">
+                        <p>Drop us a line today for a free quote!</p>
+                    </div>
+                </div>
+                <div class="fl-cta-button">
+                    <div class="fl-button-wrap fl-button-width-full">
+                        <a href="https://www.ctkusa.com/contact/" target="_self" class="fl-button" role="button">
+                            <span class="fl-button-text">Click Here</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="site-info-inner">
+
+
+                <nav class="footer-menu">
+
+                    <div class="menu-footer-container">
+                        <ul id="menu-footer" class="menu">
+                            <li><a href="/home/about">Who We Are</a></li>
+                            <li><a href="/home/index" aria-current="page">Logistics</a></li>
+                            <li><a href="https://www.ctkusa.com/blog/" aria-current="page">Blog</a></li>
+                            <li><a href="https://www.ctkusa.com/contact/">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </nav><!-- .footer-menu -->
+
+                <nav class="social-menu">
+
+                    @*<div class="menu-social-container">
+                        <ul id="menu-social" class="menu">
+                            <li><a href="">LinkedIn</a></li>
+                            <li><a href="">Instagram</a></li>
+                            <li><a href="">Facebook</a></li>
+                        </ul>
+                    </div>*@
+                </nav><!-- .social-menu -->
+
+                <div class="site-info-text">
+
+                    Copyright © 2020 Logistic Solution USA
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        !function (o) { var e = !1, n = !1; function t() { n.add(e).toggleClass("open") } function a(e) { e.preventDefault(); var n = o(this).parent(".menu-item-has-children"); n && n.toggleClass("open") } o(document).ready(function () { e = o("#site-navigation"), n = o("#menu-toggle"), e && n && (n.on("click", t), e.find(".expand").on("click", a), o(document).on("wp-custom-header-video-loaded", function () { o(".site-header").addClass("video-header") })) }) }(jQuery);
+        function myFunction() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "inline-block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>

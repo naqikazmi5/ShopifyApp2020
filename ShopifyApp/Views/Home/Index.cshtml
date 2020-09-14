@@ -1,0 +1,483 @@
+﻿
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+
+<html lang="en-us">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C700&amp;subset=latin&amp;ver=1.8.7" type="text/css" media="all">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        body, h1, h2, h3, h4, h5, h6, p, span, article, fieldset, section {
+            font-family: "Roboto", sans-serif;
+        }
+
+        .row {
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 3.375rem;
+            margin-top: 2rem;
+            font-weight: lighter;
+        }
+
+        h3 {
+            font-size: 2.9375rem;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            font-weight: lighter;
+        }
+
+        h4 {
+            font-size: 2.1875rem;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            font-weight: lighter;
+        }
+
+        ul {
+            margin-left: 1.75rem;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            list-style-position: outside;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        .site-header {
+            background-color: white;
+            letter-spacing: -.01em;
+            padding: 0;
+            position: relative;
+        }
+
+        .site-title-wrapper {
+            float: left;
+            padding: 23px;
+        }
+
+        .main-navigation-container {
+            float: right;
+            background-color: #ffffff;
+        }
+
+        .main-navigation ul {
+            list-style: none;
+            margin: 0;
+            padding-left: 0;
+        }
+
+        .main-navigation a {
+            display: block;
+            text-decoration: none;
+            padding: 5px 0px 5px 10px;
+            color: #181818;
+            border-bottom: transparent 2px solid;
+        }
+
+        .menu-toggle {
+            width: 4.55rem;
+            padding: 0.6rem;
+            cursor: pointer;
+            outline: none;
+            position: absolute;
+            top: -68px;
+            right: 0;
+            display: block;
+            padding: 0 9px 24px 0;
+            z-index: 99999;
+        }
+
+            .menu-toggle div {
+                background-color: #252525;
+            }
+
+            .menu-toggle div {
+                background-color: #181818;
+                margin: 0.43rem .86rem 0.43rem 0;
+                -webkit-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+                -webkit-transition: .15s ease-in-out;
+                transition: .15s ease-in-out;
+                -webkit-transform-origin: left center;
+                -ms-transform-origin: left center;
+                transform-origin: left center;
+                height: 0.32rem;
+            }
+
+            .menu-toggle.open div:nth-child(1) {
+                -webkit-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                transform: rotate(45deg);
+                width: 25px;
+            }
+
+            .menu-toggle.open div:nth-child(2) {
+                width: 0%;
+                opacity: 0;
+            }
+
+            .menu-toggle.open div:nth-child(3) {
+                -webkit-transform: rotate(-45deg);
+                -ms-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+                width: 25px;
+                margin: 0;
+                margin-top: 7px;
+            }
+
+        .hero {
+            background-image: url(https://secureservercdn.net/45.40.144.60/gxc.552.myftpupload.com/wp-content/uploads/2018/06/qtq80-F5gnnM-2163x1300.jpeg);
+        }
+
+        .hero {
+            -webkit-background-size: cover;
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+        }
+
+        .hero {
+            -webkit-box-shadow: inset 0 0 0 9999em;
+            -moz-box-shadow: inset 0 0 0 9999em;
+            box-shadow: inset 0 0 0 9999em;
+            color: rgba(245, 245, 245, 0.75);
+        }
+
+        .page-header {
+            padding-bottom: 0;
+            margin: 0;
+            border-bottom: 0;
+        }
+
+            .page-header .page-title {
+                margin: 1em .5em;
+                text-align: center;
+            }
+
+        .hero .page-header h1 {
+            color: #252525;
+        }
+
+        .hero .hero-inner {
+            padding: 5%;
+        }
+
+        #content {
+            padding: 20px 25px;
+        }
+
+        .page-content p {
+            font-size: 18px;
+            line-height: 30px;
+            margin: 0 0 30px 0;
+        }
+
+        .site-info-wrapper {
+            padding: 0;
+            color: #222;
+            line-height: 1.5;
+        }
+
+            .site-info-wrapper .site-info {
+                padding: 2.5rem 2rem;
+            }
+
+        .footer-menu ul {
+            list-style: none;
+            margin: 0 0 5px;
+            padding: 0;
+            text-align: center;
+        }
+
+            .footer-menu ul li {
+                display: inline-block;
+                font-size: .875rem;
+                font-weight: 600;
+                margin: 0 10px;
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+                .footer-menu ul li a {
+                    color: #181818;
+                }
+
+                    .footer-menu ul li a, .footer-menu ul li a:visited {
+                        color: #686868;
+                        font-size: 1.5em;
+                    }
+
+        .social-menu ul {
+            list-style: none;
+            text-align: center;
+            margin: 0 1.25em 0 0;
+            margin: 0 1.25rem 0 0;
+        }
+
+            .social-menu ul li {
+                display: inline-block;
+                position: relative;
+                padding: 0;
+                margin: 3px;
+            }
+
+        .site-info-inner {
+            display: flow-root;
+            padding: 20px 0px;
+        }
+
+            .site-info-inner .site-info-text {
+                color: #686868;
+            }
+
+        @@media only screen and (min-width: 40.063em) {
+            .main-navigation li {
+                position: relative;
+                float: left;
+                padding: 2.1em 1em;
+            }
+
+            h2 {
+                font-size: 4rem;
+            }
+
+            h3 {
+                font-size: 3.25rem;
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                line-height: 1.4;
+            }
+
+            .footer-menu {
+                float: left;
+            }
+
+            .social-menu {
+                text-align: right;
+                float: right;
+                padding: 0 0 20px;
+            }
+
+            .footer-menu ul {
+                text-align: left;
+            }
+
+            .social-menu {
+                text-align: right;
+                float: right;
+                padding: 0 0 20px;
+            }
+
+            .site-info-inner .site-info-text {
+                text-align: left;
+                float: left;
+                width: 100%;
+                margin-left: 10px;
+            }
+        }
+
+        @@media only screen and (max-width: 40em) {
+            .main-navigation-container {
+                float: none;
+                clear: both;
+                z-index: 9999;
+                position: relative;
+            }
+        }
+
+        @@media only screen and (max-width: 40.063em) {
+            #site-navigation li:hover {
+                background-color: #fafafa;
+            }
+
+            #site-navigation {
+                display: none;
+            }
+
+                #site-navigation.open {
+                    display: block;
+                }
+        }
+
+        @@media screen and (max-width: 900px) {
+            .hero {
+                -webkit-background-size: cover;
+                background-size: cover;
+                min-height: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    @if (ViewBag.Msg != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @*<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+            <strong>Success! </strong>@ViewBag.Msg
+        </div>
+    }
+
+
+    <div class="row">
+        <header id="masthead" class="site-header" role="banner">
+            <div class="site-header-wrapper">
+                <div class="site-title-wrapper">
+                    @*<a href="https://logisticsolutionctkusa.azurewebsites.net/Login">*@
+                    <a href="/home/index">
+                        @*https://logisticsolutionctkusa.azurewebsites.net/Content/img/Logistic%20Logo.png*@
+                        <img src="~/images/cropped-mainlogo.png" class="logo" alt="Logistic Solutions">
+                    </a>
+                </div><!-- .site-title-wrapper -->
+                <div class="main-navigation-container">
+                    <div class="menu-toggle" id="menu-toggle" role="button" tabindex="0">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div><!-- #menu-toggle -->
+                    <nav id="site-navigation" class="main-navigation">
+                        <div class="menu-primary-menu-container">
+                            <ul id="menu-primary-menu" class="menu">
+                                <li><a href="/home/about">Who We Are</a></li>
+                                <li><a href="/home/index" aria-current="page">Logistics</a></li>
+                                @*<li><a href="/home/integrationstore" aria-current="page">Integration</a></li>*@
+                                <li><a href="https://www.ctkusa.com/blog/" aria-current="page">Blog</a></li>
+                                <li><a href="https://www.ctkusa.com/contact/">Contact Us</a></li>
+                            </ul>
+                        </div>
+                    </nav><!-- #site-navigation -->
+                </div>
+            </div><!-- .site-header-wrapper -->
+        </header>
+    </div>
+
+    <div class="row">
+        <div class="hero">
+            <div class="hero-inner">
+                <div class="page-title-container">
+                    <header class="page-header">
+                        <h1 class="page-title">Logistics</h1>
+                    </header><!-- .entry-header -->
+                </div><!-- .page-title-container -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="content" class="site-content">
+            <main class="site-main" role="main">
+                <article id="post-357" class="post-357 page type-page status-publish hentry">
+                    <div class="page-content">
+                        <h2>Custom Logistics Solutions</h2>
+                        <p><strong>Logictics Solution USA</strong> Logistics is a full-service logistics company with over 20 years of experience in the industry. Logistic Solution’s newly re-designed facility is strategically located just minutes away from the Ontario airport and has multiple direct routes to the Long Beach Port. We focus on providing customized services to our customers while always maintaining the highest level of service at the lowest possible cost.&nbsp;From larger corporations to start-ups, the ability to mix our logistics, marketing, and sales groups allows us to provide some of the <strong>most competitive rates</strong> in the market while maintaining the high quality service you come to expect from <strong>Logistics Solution USA</strong>.</p>
+                        <h2>Why Logictics Solution?</h2>
+                        <p>At Logictics Solution USA we don’t believe in a one plan fits all approach. Each customer and their business gets treated with custom solutions. Our customers and professional partnerships range from larger corporations to start-ups. The ability to mix our logistics, in-house marketing and sales group allows us to provide some of the most competitive rates in the market. Our goal is always to maintain some of the most competitive rates in the market while providing the high quality service and results you come to expect from Logictics Solution USA.</p>
+                        <h2>B2B &amp; B2C Solutions</h2>
+                        <h4>Fulfillment</h4>
+                        <ul>
+                            <li>eCommerce Order Fulfillment</li>
+                            <li>Pick &amp; Pack</li>
+                            <li>Kitting and Assembly</li>
+                            <li>B2B &amp; B2C order Fulfillment</li>
+                        </ul>
+                        <h4>Order Management</h4>
+                        <ul>
+                            <li>Activity Reporting</li>
+                            <li>SKU Control</li>
+                            <li>Cycle and Physical Inventory Count</li>
+                            <li>Inventory Allocating</li>
+                        </ul>
+                        <h4>Shipping &amp; Tracking</h4>
+                        <ul>
+                            <li>Small Parcel Rate Shopping</li>
+                            <li>FTL &amp; LTL Shipping Management</li>
+                        </ul>
+                        <h4>RMA ( Return Merchandise Authorization)</h4>
+                        <ul>
+                            <li>Inspection</li>
+                            <li>Receiving and Re-stocking</li>
+                            <li>Disposal</li>
+                            <li>Exchange</li>
+                        </ul>
+                        <h4>FBA Preparation</h4>
+                        <ul>
+                            <li>Wrapping &amp; Palletizing</li>
+                            <li>Pallet Storage</li>
+                            <li>Transloading</li>
+                            <li>Labeling</li>
+                            <li>Shipping Compliance</li>
+                            <li>Shipping Solutions</li>
+                        </ul>
+                        <p><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31380.450316903196!2d-117.62775424524423!3d34.04436767301744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c3350d89cb2295%3A0x56ed4fa768788803!2sCTK+USA+-+Logistics+and+Fulfillment+Center!5e0!3m2!1sen!2sus!4v1529613210370" height="500" frameborder="0" allowfullscreen="allowfullscreen" style="width:100%"></iframe></p>
+                        <h3>READY TO FIND OUT HOW WE CAN HELP YOUR BUSINESS GROW?</h3>
+                        @*<p><a role="button" href="https://logisticsolutionstage.azurewebsites.net/Login" target="_self" rel="noopener noreferrer"> Learn More </a></p>*@
+                        <h3>BUSINESS HOURS</h3>
+                        <p>LOGISTICS: Monday – Friday, 8:00 a.m. – 5:00 p.m. PST <br /> OFFICE: Monday – Friday, 8:00 a.m. – 5:00 p.m. PST</p>
+                        <h3>CONTACT INFORMATION</h3>
+                        <p>2110 S. Parco Ave, Ontario, CA. 91761, USA Phone: (909) 406-5388, e-mail: info@logisticsolution.com <iframe src="https://www.google.com/maps/embed/v1/place?q=2110+S.+Parco+Ave.+Ontario&amp;key=AIzaSyD09zQ9PNDNNy9TadMuzRV_UsPUoWKntt8"></iframe></p>
+
+                    </div><!-- .page-content -->
+                </article><!-- #post-## -->
+            </main>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="site-info-inner">
+
+
+                <nav class="footer-menu">
+
+                    <div class="menu-footer-container">
+                        <ul id="menu-footer" class="menu">
+                            <li><a href="/home/about">Who We Are</a></li>
+                            <li><a href="/home/index" aria-current="page">Logistics</a></li>
+                            <li><a href="https://www.ctkusa.com/blog/" aria-current="page">Blog</a></li>
+                            <li><a href="https://www.ctkusa.com/contact/">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </nav><!-- .footer-menu -->
+
+                <nav class="social-menu">
+
+                    @*<div class="menu-social-container">
+                            <ul id="menu-social" class="menu">
+                                <li><a href="">LinkedIn</a></li>
+                                <li><a href="">Instagram</a></li>
+                                <li><a href="">Facebook</a></li>
+                            </ul>
+                        </div>*@
+                </nav><!-- .social-menu -->
+
+                <div class="site-info-text">
+
+                    Copyright © 2020 Logistic Solution USA
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        !function (o) { var e = !1, n = !1; function t() { n.add(e).toggleClass("open") } function a(e) { e.preventDefault(); var n = o(this).parent(".menu-item-has-children"); n && n.toggleClass("open") } o(document).ready(function () { e = o("#site-navigation"), n = o("#menu-toggle"), e && n && (n.on("click", t), e.find(".expand").on("click", a), o(document).on("wp-custom-header-video-loaded", function () { o(".site-header").addClass("video-header") })) }) }(jQuery);
+        window.setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                $(this).remove();
+            });
+        }, 4000);
+    </script>
+</body>
+</html>
