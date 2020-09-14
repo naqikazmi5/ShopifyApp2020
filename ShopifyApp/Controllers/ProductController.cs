@@ -187,6 +187,8 @@ namespace ShopifyApp.Controllers
             }
             return Ok(response);
         }
+
+        //SendProductData
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> SendProductData([FromBody]Product model)
