@@ -60,7 +60,29 @@ namespace ShopifyApp.Models.ProductHelper
             }
             return Products;
         }
-        public async Task<List<ProductReturnModel>> GetProductReturnModel(List<Product> products,string shopname)
+        public async Task<Product> GetProduct(ProductDetailModel model)
+        {
+            Product product = new Product();
+            string msg;
+            try
+            {
+                var allProducts = new List<Product>();
+                var service = new ProductService(model.shopifyurl, model.token);
+                product = await service.GetAsync(Convert.ToInt64(model.productId));
+                var mservice = new MetaFieldService(model.shopifyurl, model.token);
+                foreach (var vgt in product.Variants)
+                {
+                    var vmetafields = await mservice.ListAsync(Convert.ToInt64(vgt.Id), "variants");
+                    vgt.Metafields = vmetafields.Items;
+                }
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message.ToString();
+            }
+            return product;
+        }
+        public async Task<List<ProductReturnModel>> GetProductReturnModel(List<Product> products, string shopname)
         {
             List<ProductReturnModel> productReturns = new List<ProductReturnModel>();
             foreach (var item in products)
@@ -121,7 +143,7 @@ namespace ShopifyApp.Models.ProductHelper
         {
             foreach (var item in products)
             {
-                long id = Convert.ToInt64(item.Id); 
+                long id = Convert.ToInt64(item.Id);
                 var service = new MetaFieldService(shopifyurl, token);
                 var count = await service.CountAsync(id, "products");
                 var metafields = await service.ListAsync(id, "products");
@@ -129,7 +151,7 @@ namespace ShopifyApp.Models.ProductHelper
                 {
                     await service.DeleteAsync(Convert.ToInt64(item1.Id));
                 }
-                
+
                 var metafield1 = new MetaField()
                 {
                     Namespace = "products/update",
@@ -142,10 +164,10 @@ namespace ShopifyApp.Models.ProductHelper
                 //Create a new metafield on a product
                 metafield1 = await service.CreateAsync(metafield1, id, "products");
             }
-            
+
             return "";
         }
-        public async Task<bool> SyncProduct(string shopname, string token , string serverurl)
+        public async Task<bool> SyncProduct(string shopname, string token, string serverurl)
         {
             bool response = true;
             try
@@ -170,7 +192,7 @@ namespace ShopifyApp.Models.ProductHelper
 
                 throw;
             }
-           return  response;
+            return response;
         }
-        }
+    }
 }

@@ -129,7 +129,7 @@ namespace ShopifyApp.Controllers
                 string accessToken = await AuthorizationService.Authorize(code, shop, apiKey, apiPassword);
                 token = accessToken;
                 shopifyurl = shop;
-                await CreateUninstallHook(shopifyurl, token);
+                //await CreateUninstallHook(shopifyurl, token);
                 response.IsInstall = await InstallResponse(shopname, token);
                 response.StoreLocations = await StoreLocations(shop, token);
             }
@@ -143,6 +143,7 @@ namespace ShopifyApp.Controllers
             //response.ProductSync = await SyncProducts();
             //response.OrderSync = await SyncOrders();
             //response.WebhookCreated = await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/uninstall", "app/uninstalled");
+            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/testing", "product_metafields/update");
             await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addcustomer", "customers/create");
             await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addcustomer", "customers/update");
             await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/deletecustomer", "customers/delete");
@@ -207,6 +208,20 @@ namespace ShopifyApp.Controllers
             await UnInstallResponse(shopname);
             var req = HttpContext.Request.Body;
             var json = new StreamReader(req).ReadToEnd();
+            return StatusCode(200);
+        }
+        [HttpPost]
+        public async Task<IActionResult> testing()
+        {
+            var requestHeaders = Request.Headers;
+            var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
+            string[] shop = shoper.Split(".");
+            string shopname = shop[0];
+            string requestBody = null;
+            using (StreamReader reader = new StreamReader(Request.Body))
+            {
+                requestBody = await reader.ReadToEndAsync();
+            }
             return StatusCode(200);
         }
         [HttpPost]
@@ -454,7 +469,6 @@ namespace ShopifyApp.Controllers
         {
             try
             {
-                var service = new LocationService(shopifyurl, token);
                 var requestHeaders = Request.Headers;
                 var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
                 string[] shop = shoper.Split(".");
@@ -467,17 +481,36 @@ namespace ShopifyApp.Controllers
                 string shopifySecretKey = config.Value.ApiPassword;
                 if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
                 {
-                    var client = new HttpClient();
-                    List<ProductReturnModel> products = new List<ProductReturnModel>();
-                    var json = requestBody;
-                    ProductReturnModel product = JsonConvert.DeserializeObject<ProductReturnModel>(json);
-                    product.StoreName = shopname;
-                    products.Add(product);
-                    string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyProducts";
-                    string output = JsonConvert.SerializeObject(products);
-                    var response2 = client.PostAsJsonAsync(apiUrl2, products).Result;
-                    response2.EnsureSuccessStatusCode();
-                    string responseBody1 = await response2.Content.ReadAsStringAsync();
+                    ShopInfo shopInfo = new ShopInfo();
+                    shopInfo.ShopName = shopname;
+                    var client1 = new HttpClient();
+                    string apiUrl = $"{config.Value.ResponseUrl}/api/ShopifyToken";
+                    var response = client1.PostAsJsonAsync(apiUrl, shopInfo).Result;
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var readString = JObject.Parse(responseBody)["data"];
+                    string token = readString.ToString();
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        List<ProductReturnModel> products = new List<ProductReturnModel>();
+                        List<Product> prds = new List<Product>();
+                        var json = requestBody;
+                        ProductReturnModel product = JsonConvert.DeserializeObject<ProductReturnModel>(json);
+                        ProductDetailModel pdm = new ProductDetailModel();
+                        pdm.productId = product.Id.ToString();
+                        pdm.shopifyurl = shoper;
+                        pdm.token = token;
+                        var prd = await new ProductHandler().GetProduct(pdm);
+                        prds.Add(prd);
+                        var client = new HttpClient();
+                        products = await new ProductHandler().GetProductReturnModel(prds, shopname);
+                        string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyProducts";
+                        string output = JsonConvert.SerializeObject(products);
+                        var response2 = client.PostAsJsonAsync(apiUrl2, products).Result;
+                        response2.EnsureSuccessStatusCode();
+                        string responseBody1 = await response2.Content.ReadAsStringAsync();
+                    }
+                       
                 }
                 else
                 {
