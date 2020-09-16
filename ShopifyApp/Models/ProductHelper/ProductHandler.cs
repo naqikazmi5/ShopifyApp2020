@@ -26,20 +26,20 @@ namespace ShopifyApp.Models.ProductHelper
                 var service = new ProductService(model.shopifyurl, model.token);
                 var page = await service.ListAsync(new ProductListFilter
                 {
-                    Limit = 2,
+                    Limit = 250,
                 });
-                allProducts.AddRange(page.Items);
-                //while (true)
-                //{
-                //    allProducts.AddRange(page.Items);
+                //allProducts.AddRange(page.Items);
+                while (true)
+                {
+                    allProducts.AddRange(page.Items);
 
-                //    if (!page.HasNextPage)
-                //    {
-                //        break;
-                //    }
+                    if (!page.HasNextPage)
+                    {
+                        break;
+                    }
 
-                //    page = await service.ListAsync(page.GetNextPageFilter());
-                //}
+                    page = await service.ListAsync(page.GetNextPageFilter());
+                }
                 Products = allProducts;
                 var mservice = new MetaFieldService(model.shopifyurl, model.token);
                 foreach (var item in Products)

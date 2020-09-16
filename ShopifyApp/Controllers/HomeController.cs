@@ -117,6 +117,7 @@ namespace ShopifyApp.Controllers
         public async Task<IActionResult> auth(string shop, string code, string hmac, string state)
        {
             shopnamer = shop;
+            string shopname = "";
             var requestHeaders = Request.Headers;
             var redirecttype = requestHeaders.FirstOrDefault(x => x.Key == "Sec-Fetch-Dest").Value.FirstOrDefault();
             //var redirecttype1 = requestHeaders.FirstOrDefault(x => x.Key == "Sec-Fetch-Dest");
@@ -125,41 +126,25 @@ namespace ShopifyApp.Controllers
             {
                 InstallResponse response = new InstallResponse();
                 string[] shosp = shop.Split(".");
-                string shopname = shosp[0];
+                shopname = shosp[0];
                 string accessToken = await AuthorizationService.Authorize(code, shop, apiKey, apiPassword);
                 token = accessToken;
                 shopifyurl = shop;
                 //await CreateUninstallHook(shopifyurl, token);
-                response.IsInstall = await InstallResponse(shopname, token);
-                response.StoreLocations = await StoreLocations(shop, token);
             }
             if (redirecttype == "iframe")
             {
                 //return RedirectToAction("IntegrationStore");
                 return RedirectToAction("Index");
             }
-            //await CreateUninstallHook();
-            //response.CustomerSync = await SyncCustomers();
-            //response.ProductSync = await SyncProducts();
-            //response.OrderSync = await SyncOrders();
-            //response.WebhookCreated = await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/uninstall", "app/uninstalled");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/testing", "product_metafields/update");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addcustomer", "customers/create");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addcustomer", "customers/update");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/deletecustomer", "customers/delete");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addproduct", "products/create");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addproduct", "products/update");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/deleteproduct", "products/delete");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addorder", "orders/create");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/addorder", "orders/updated");
-            await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/deleteorder", "orders/delete");
+            await StoreLocations(shop, token);
+            await InstallResponse(shopname, token);
             //response.StoreLocations = await StoreLocations();
             //return View();
             IsAuth = true;
             var AbsoluteUri = $"https://{shop}/admin/apps/{apiKey}";
             //return StatusCode(200);
             return Redirect(AbsoluteUri);
-
         }
         [HttpGet]
         public async Task<IActionResult> SyncData(string StoreName,string AccessToken, int Duration , bool InventorySync, bool ProductSync, bool CustomerSync, bool OrderSync)

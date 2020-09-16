@@ -328,6 +328,21 @@ namespace ShopifyApp.Controllers
                 {
                     response.OrderSync = await SyncOrders(shopifyurl, model.StoreName, model.AccessToken, model.Duration);
                 }
+                await CreateUninstallHook(shopifyurl, model.AccessToken);
+                //response.CustomerSync = await SyncCustomers();
+                //response.ProductSync = await SyncProducts();
+                //response.OrderSync = await SyncOrders();
+                //response.WebhookCreated = await CreateWebHook(shopifyurl, token, $"{config.Value.RootUrl}/home/uninstall", "app/uninstalled");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/testing", "product_metafields/update");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addcustomer", "customers/create");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addcustomer", "customers/update");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/deletecustomer", "customers/delete");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addproduct", "products/create");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addproduct", "products/update");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/deleteproduct", "products/delete");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addorder", "orders/create");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addorder", "orders/updated");
+                await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/deleteorder", "orders/delete");
                 //response.WebhookCreated = await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/uninstall", "app/uninstalled");
                 //await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addcustomer", "customers/create");
                 //await CreateWebHook(shopifyurl, model.AccessToken, $"{config.Value.RootUrl}/home/addcustomer", "customers/update");
@@ -345,6 +360,20 @@ namespace ShopifyApp.Controllers
                 return BadRequest(ex.Message);
             }
             return Ok(response);
+        }
+        public async Task<string> CreateUninstallHook(string shopifyurl, string token)
+        {
+            var service = new WebhookService(shopifyurl, token);
+            var webhooks = await service.ListAsync();
+            if (webhooks.Items?.FirstOrDefault() != null)
+            {
+                foreach (var item in webhooks.Items)
+                {
+                    long itemid = Convert.ToInt64(item.Id);
+                    await service.DeleteAsync(itemid);
+                }
+            }
+            return "";
         }
         public async Task<bool> CreateWebHook(string shopifyurl, string token, string Address, string Topic)
         {
@@ -404,6 +433,7 @@ namespace ShopifyApp.Controllers
             try
             {
                 var client = new HttpClient();
+                client.Timeout = TimeSpan.FromMinutes(30);
                 ProductDetailModel model = new ProductDetailModel();
                 model.shopifyurl = shopifyurl;
                 model.token = token;
