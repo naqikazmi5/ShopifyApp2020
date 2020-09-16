@@ -116,8 +116,10 @@ namespace ShopifyApp.Controllers
         }
         public async Task<IActionResult> auth(string shop, string code, string hmac, string state)
        {
+            string[] shosp = shop.Split(".");
+            string shopname = shosp[0];
+            string accessToken = "";
             shopnamer = shop;
-            string shopname = "";
             var requestHeaders = Request.Headers;
             var redirecttype = requestHeaders.FirstOrDefault(x => x.Key == "Sec-Fetch-Dest").Value.FirstOrDefault();
             //var redirecttype1 = requestHeaders.FirstOrDefault(x => x.Key == "Sec-Fetch-Dest");
@@ -125,9 +127,8 @@ namespace ShopifyApp.Controllers
             if (!string.IsNullOrEmpty(shop) && !string.IsNullOrEmpty(code))
             {
                 InstallResponse response = new InstallResponse();
-                string[] shosp = shop.Split(".");
-                shopname = shosp[0];
-                string accessToken = await AuthorizationService.Authorize(code, shop, apiKey, apiPassword);
+                
+                accessToken = await AuthorizationService.Authorize(code, shop, apiKey, apiPassword);
                 token = accessToken;
                 shopifyurl = shop;
                 //await CreateUninstallHook(shopifyurl, token);
@@ -137,8 +138,8 @@ namespace ShopifyApp.Controllers
                 //return RedirectToAction("IntegrationStore");
                 return RedirectToAction("Index");
             }
-            await StoreLocations(shop, token);
-            await InstallResponse(shopname, token);
+            await StoreLocations(shop, accessToken);
+            await InstallResponse(shopname, accessToken);
             //response.StoreLocations = await StoreLocations();
             //return View();
             IsAuth = true;
