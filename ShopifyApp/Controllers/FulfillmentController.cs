@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ShopifyApp.Models.FulfillmentHelper;
 using ShopifySharp;
 
@@ -34,7 +35,8 @@ namespace ShopifyApp.Controllers
                     LocationId = lid.Id
                 };
                 fulfillment = await service.CreateAsync(model.orderId, fulfillment);
-                response = "success";
+
+                response = JsonConvert.SerializeObject(fulfillment);
             }
             catch (Exception ex)
             {

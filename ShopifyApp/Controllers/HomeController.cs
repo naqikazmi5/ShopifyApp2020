@@ -51,6 +51,9 @@ namespace ShopifyApp.Controllers
         private static string apiPassword = "";
         private static bool IsAuth = false;
         private static string shopnamer = "";
+        private static string pidval = "";
+        private static string oidval = "";
+        private static string cidval = "";
         public IActionResult Index()
         {
             if (IsAuth == true)
@@ -215,38 +218,44 @@ namespace ShopifyApp.Controllers
         {
             try
             {
-                var requestHeaders = Request.Headers;
-                var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
-                string[] shop = shoper.Split(".");
-                string shopname = shop[0];
-                string requestBody = null;
-                using (StreamReader reader = new StreamReader(Request.Body))
-                {
-                    requestBody = await reader.ReadToEndAsync();
-                }
-                string shopifySecretKey = config.Value.ApiPassword;
-                if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
-                {
-
-                    var client = new HttpClient();
-                    List<CustomerReturnModel> customers = new List<CustomerReturnModel>();
-                    var json = requestBody;
-                    CustomerReturnModel customer = JsonConvert.DeserializeObject<CustomerReturnModel>(json);
-                    customer.StoreName = shopname;
-                    customers.Add(customer);
-                    string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyCustomers";
-                    // strong typed instance
-                    ProductDetailModel pdm = new ProductDetailModel();
-                    pdm.shopifyurl = shopifyurl;
-                    pdm.token = token;
-                    var response2 = client.PostAsJsonAsync(apiUrl2, customers).Result;
-                    response2.EnsureSuccessStatusCode();
-                    string responseBody1 = await response2.Content.ReadAsStringAsync();
-                }
-                else
-                {
-                    //Webhook is not authentic and should not be acted on.
-                }
+                   var requestHeaders = Request.Headers;
+                //var cid = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Customer-Id").Value.FirstOrDefault();
+                    var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
+                    string[] shop = shoper.Split(".");
+                    string shopname = shop[0];
+                    string requestBody = null;
+                    using (StreamReader reader = new StreamReader(Request.Body))
+                    {
+                        requestBody = await reader.ReadToEndAsync();
+                    }
+                    string shopifySecretKey = config.Value.ApiPassword;
+                    if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
+                    {
+                        var client = new HttpClient();
+                        List<CustomerReturnModel> customers = new List<CustomerReturnModel>();
+                        var json = requestBody;
+                        CustomerReturnModel customer = JsonConvert.DeserializeObject<CustomerReturnModel>(json);
+                        var cid = customer.Id.ToString();
+                        customer.StoreName = shopname;
+                        customers.Add(customer);
+                        if (cid != cidval)
+                        {
+                        cidval = customer.Id.ToString();
+                        string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyCustomers";
+                        // strong typed instance
+                        ProductDetailModel pdm = new ProductDetailModel();
+                        pdm.shopifyurl = shopifyurl;
+                        pdm.token = token;
+                        var response2 = client.PostAsJsonAsync(apiUrl2, customers).Result;
+                        response2.EnsureSuccessStatusCode();
+                        string responseBody1 = await response2.Content.ReadAsStringAsync();
+                        cidval = "";
+                        }
+                    }
+                    else
+                    {
+                        //Webhook is not authentic and should not be acted on.
+                    }
             }
             catch (Exception ex)
             {
@@ -456,52 +465,59 @@ namespace ShopifyApp.Controllers
             try
             {
                 var requestHeaders = Request.Headers;
-                var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
-                string[] shop = shoper.Split(".");
-                string shopname = shop[0];
-                string requestBody = null;
-                using (StreamReader reader = new StreamReader(Request.Body))
+                var pid = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Product-Id").Value.FirstOrDefault();
+                if (pid != pidval)
                 {
-                    requestBody = await reader.ReadToEndAsync();
-                }
-                string shopifySecretKey = config.Value.ApiPassword;
-                if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
-                {
-                    ShopInfo shopInfo = new ShopInfo();
-                    shopInfo.ShopName = shopname;
-                    var client1 = new HttpClient();
-                    string apiUrl = $"{config.Value.ResponseUrl}/api/ShopifyToken";
-                    var response = client1.PostAsJsonAsync(apiUrl, shopInfo).Result;
-                    response.EnsureSuccessStatusCode();
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    var readString = JObject.Parse(responseBody)["data"];
-                    string token = readString.ToString();
-                    if (!string.IsNullOrEmpty(token))
+                    pidval = pid;
+                    var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
+                    string[] shop = shoper.Split(".");
+                    string shopname = shop[0];
+                    string requestBody = null;
+                    using (StreamReader reader = new StreamReader(Request.Body))
                     {
-                        List<ProductReturnModel> products = new List<ProductReturnModel>();
-                        List<Product> prds = new List<Product>();
-                        var json = requestBody;
-                        ProductReturnModel product = JsonConvert.DeserializeObject<ProductReturnModel>(json);
-                        ProductDetailModel pdm = new ProductDetailModel();
-                        pdm.productId = product.Id.ToString();
-                        pdm.shopifyurl = shoper;
-                        pdm.token = token;
-                        var prd = await new ProductHandler().GetProduct(pdm);
-                        prds.Add(prd);
-                        var client = new HttpClient();
-                        products = await new ProductHandler().GetProductReturnModel(prds, shopname);
-                        string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyProducts";
-                        string output = JsonConvert.SerializeObject(products);
-                        var response2 = client.PostAsJsonAsync(apiUrl2, products).Result;
-                        response2.EnsureSuccessStatusCode();
-                        string responseBody1 = await response2.Content.ReadAsStringAsync();
+                        requestBody = await reader.ReadToEndAsync();
                     }
-                       
+                    string shopifySecretKey = config.Value.ApiPassword;
+                    if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
+                    {
+                        ShopInfo shopInfo = new ShopInfo();
+                        shopInfo.ShopName = shopname;
+                        var client1 = new HttpClient();
+                        string apiUrl = $"{config.Value.ResponseUrl}/api/ShopifyToken";
+                        var response = client1.PostAsJsonAsync(apiUrl, shopInfo).Result;
+                        response.EnsureSuccessStatusCode();
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        var readString = JObject.Parse(responseBody)["data"];
+                        string token = readString.ToString();
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            List<ProductReturnModel> products = new List<ProductReturnModel>();
+                            List<Product> prds = new List<Product>();
+                            var json = requestBody;
+                            ProductReturnModel product = JsonConvert.DeserializeObject<ProductReturnModel>(json);
+                            ProductDetailModel pdm = new ProductDetailModel();
+                            pdm.productId = product.Id.ToString();
+                            pdm.shopifyurl = shoper;
+                            pdm.token = token;
+                            var prd = await new ProductHandler().GetProduct(pdm);
+                            prds.Add(prd);
+                            var client = new HttpClient();
+                            products = await new ProductHandler().GetProductReturnModel(prds, shopname);
+                            string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyProducts";
+                            string output = JsonConvert.SerializeObject(products);
+                            var response2 = client.PostAsJsonAsync(apiUrl2, products).Result;
+                            response2.EnsureSuccessStatusCode();
+                            string responseBody1 = await response2.Content.ReadAsStringAsync();
+                            pidval = "";
+                        }
+
+                    }
+                    else
+                    {
+                        //Webhook is not authentic and should not be acted on.
+                    }
                 }
-                else
-                {
-                    //Webhook is not authentic and should not be acted on.
-                }
+               
             }
             catch (Exception)
             {
@@ -536,34 +552,39 @@ namespace ShopifyApp.Controllers
             try
             {
                 var requestHeaders = Request.Headers;
-                var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
-                string[] shop = shoper.Split(".");
-                string shopname = shop[0];
-                string requestBody = null;
-                using (StreamReader reader = new StreamReader(Request.Body))
+                var pid = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Product-Id").Value.FirstOrDefault();
+                if (pid != pidval)
                 {
-                    requestBody = await reader.ReadToEndAsync();
-                }
-                string shopifySecretKey = config.Value.ApiPassword;
-                if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
-                {
-                    List<long> ids = new List<long>();
-                    var client = new HttpClient();
-                    List<ProductReturnModel> products = new List<ProductReturnModel>();
-                    var json = requestBody;
-                    ProductReturnModel product = JsonConvert.DeserializeObject<ProductReturnModel>(json);
-                    product.StoreName = shopname;
-                    products.Add(product);
-                    long id = (long)Convert.ToDouble(product.Id);
-                    ids.Add(id);
-                    string apiUrl2 = $"{config.Value.ResponseUrl}/api/DeleteShopifyProducts";
-                    var response2 = client.PostAsJsonAsync(apiUrl2, ids).Result;
-                    response2.EnsureSuccessStatusCode();
-                    string responseBody1 = await response2.Content.ReadAsStringAsync();
-                }
-                else
-                {
-                    //Webhook is not authentic and should not be acted on.
+                    var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
+                    string[] shop = shoper.Split(".");
+                    string shopname = shop[0];
+                    string requestBody = null;
+                    using (StreamReader reader = new StreamReader(Request.Body))
+                    {
+                        requestBody = await reader.ReadToEndAsync();
+                    }
+                    string shopifySecretKey = config.Value.ApiPassword;
+                    if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
+                    {
+                        List<long> ids = new List<long>();
+                        var client = new HttpClient();
+                        List<ProductReturnModel> products = new List<ProductReturnModel>();
+                        var json = requestBody;
+                        ProductReturnModel product = JsonConvert.DeserializeObject<ProductReturnModel>(json);
+                        product.StoreName = shopname;
+                        products.Add(product);
+                        long id = (long)Convert.ToDouble(product.Id);
+                        ids.Add(id);
+                        string apiUrl2 = $"{config.Value.ResponseUrl}/api/DeleteShopifyProducts";
+                        var response2 = client.PostAsJsonAsync(apiUrl2, ids).Result;
+                        response2.EnsureSuccessStatusCode();
+                        string responseBody1 = await response2.Content.ReadAsStringAsync();
+                        pidval = "";
+                    }
+                    else
+                    {
+                        //Webhook is not authentic and should not be acted on.
+                    }
                 }
             }
             catch (Exception)
@@ -578,31 +599,38 @@ namespace ShopifyApp.Controllers
             try
             {
                 var requestHeaders = Request.Headers;
-                var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
-                string[] shop = shoper.Split(".");
-                string shopname = shop[0];
-                string requestBody = null;
-                using (StreamReader reader = new StreamReader(Request.Body))
+                var oid = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Order-Id").Value.FirstOrDefault();
+                if (oid != oidval)
                 {
-                    requestBody = await reader.ReadToEndAsync();
-                }
-                string shopifySecretKey = config.Value.ApiPassword;
-                if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
-                {
-                    var client = new HttpClient();
-                    List<OrderReturnModel> orders = new List<OrderReturnModel>();
-                    var json = requestBody;
-                    OrderReturnModel order = JsonConvert.DeserializeObject<OrderReturnModel>(json);
-                    order.StoreName = shopname;
-                    orders.Add(order);
-                    string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyOrders";
-                    var response2 = client.PostAsJsonAsync(apiUrl2, orders).Result;
-                    response2.EnsureSuccessStatusCode();
-                    string responseBody1 = await response2.Content.ReadAsStringAsync();
-                }
-                else
-                {
-                    //Webhook is not authentic and should not be acted on.
+                    oidval = oid;
+                    var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
+                    string[] shop = shoper.Split(".");
+                    string shopname = shop[0];
+                    string requestBody = null;
+                    using (StreamReader reader = new StreamReader(Request.Body))
+                    {
+                        requestBody = await reader.ReadToEndAsync();
+                    }
+                    string shopifySecretKey = config.Value.ApiPassword;
+                    if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
+                    {
+                        var client = new HttpClient();
+                        List<OrderReturnModel> orders = new List<OrderReturnModel>();
+                        var json = requestBody;
+                        OrderReturnModel order = JsonConvert.DeserializeObject<OrderReturnModel>(json);
+                        order.StoreName = shopname;
+                        orders.Add(order);
+                        var json1 = JsonConvert.SerializeObject(orders);
+                        string apiUrl2 = $"{config.Value.ResponseUrl}/api/AddShopifyOrders";
+                        var response2 = client.PostAsJsonAsync(apiUrl2, orders).Result;
+                        response2.EnsureSuccessStatusCode();
+                        string responseBody1 = await response2.Content.ReadAsStringAsync();
+                        oidval = "";
+                    }
+                    else
+                    {
+                        //Webhook is not authentic and should not be acted on.
+                    }
                 }
             }
             catch (Exception)
@@ -638,34 +666,40 @@ namespace ShopifyApp.Controllers
             try
             {
                 var requestHeaders = Request.Headers;
-                var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
-                string[] shop = shoper.Split(".");
-                string shopname = shop[0];
-                string requestBody = null;
-                using (StreamReader reader = new StreamReader(Request.Body))
+                var oid = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Order-Id").Value.FirstOrDefault();
+                if (oid != oidval)
                 {
-                    requestBody = await reader.ReadToEndAsync();
-                }
-                string shopifySecretKey = config.Value.ApiPassword;
-                if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
-                {
-                    List<long> ids = new List<long>();
-                    var client = new HttpClient();
-                    List<OrderReturnModel> orders = new List<OrderReturnModel>();
-                    var json = requestBody;
-                    OrderReturnModel order = JsonConvert.DeserializeObject<OrderReturnModel>(json);
-                    order.StoreName = shopname;
-                    orders.Add(order);
-                    long id = (long)Convert.ToDouble(order.Id);
-                    ids.Add(id);
-                    string apiUrl2 = $"{config.Value.ResponseUrl}/api/DeleteShopifyOrders";
-                    var response2 = client.PostAsJsonAsync(apiUrl2, ids).Result;
-                    response2.EnsureSuccessStatusCode();
-                    string responseBody1 = await response2.Content.ReadAsStringAsync();
-                }
-                else
-                {
-                    //Webhook is not authentic and should not be acted on.
+                    oidval = oid;
+                    var shoper = requestHeaders.FirstOrDefault(x => x.Key == "X-Shopify-Shop-Domain").Value.FirstOrDefault();
+                    string[] shop = shoper.Split(".");
+                    string shopname = shop[0];
+                    string requestBody = null;
+                    using (StreamReader reader = new StreamReader(Request.Body))
+                    {
+                        requestBody = await reader.ReadToEndAsync();
+                    }
+                    string shopifySecretKey = config.Value.ApiPassword;
+                    if (AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, shopifySecretKey))
+                    {
+                        List<long> ids = new List<long>();
+                        var client = new HttpClient();
+                        List<OrderReturnModel> orders = new List<OrderReturnModel>();
+                        var json = requestBody;
+                        OrderReturnModel order = JsonConvert.DeserializeObject<OrderReturnModel>(json);
+                        order.StoreName = shopname;
+                        orders.Add(order);
+                        long id = (long)Convert.ToDouble(order.Id);
+                        ids.Add(id);
+                        string apiUrl2 = $"{config.Value.ResponseUrl}/api/DeleteShopifyOrders";
+                        var response2 = client.PostAsJsonAsync(apiUrl2, ids).Result;
+                        response2.EnsureSuccessStatusCode();
+                        string responseBody1 = await response2.Content.ReadAsStringAsync();
+                        oidval = "";
+                    }
+                    else
+                    {
+                        //Webhook is not authentic and should not be acted on.
+                    }
                 }
             }
             catch (Exception)
