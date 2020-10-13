@@ -218,12 +218,18 @@ namespace ShopifyApp.Controllers
                 var locationservice = new LocationService(shopifyurl, model.Token);
                 var locations = await locationservice.ListAsync();
                 var lid = locations.Where(x => x.Name.ToLower() == "parco").FirstOrDefault();
+                if (lid == null)
+                {
+                  response = "No Location Found";
+                   return Ok(response);
+                }
                 if (lid != null)
                 {
                     locationid = Convert.ToInt64(lid.Id);
                 }
                 //model.Token = "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";
                 var inventoryservice = new InventoryLevelService(shopifyurl, model.Token);
+                var inventoryLevel = new List<InventoryLevel>();
                 //locationid for parco
                 //long locationid = Convert.ToInt64("45679804460"); 
                 //var id1 = Convert.ToInt64("36306970148908");
@@ -241,16 +247,28 @@ namespace ShopifyApp.Controllers
                 }
                 var inventoryLevelFilter = new InventoryLevelListFilter()
                 {
-                    InventoryItemIds = ids
+                    InventoryItemIds = ids,
+                    Limit = 250
                 };
-                var levels = await inventoryservice.ListAsync(inventoryLevelFilter);
-                foreach (var item in levels.Items)
+                var page = await inventoryservice.ListAsync(inventoryLevelFilter);
+                while (true)
+                {
+                    inventoryLevel.AddRange(page.Items);
+
+                    if (!page.HasNextPage)
+                    {
+                        break;
+                    }
+                    page = await inventoryservice.ListAsync(inventoryLevelFilter);
+                }
+                foreach (var item in inventoryLevel)
                 {
                     if (item.LocationId == locationid)
                     {
                         var iteminfo = products.Where(x => x.InventoryItemId == item.InventoryItemId).FirstOrDefault();
                         item.Available = iteminfo.InventoryQuantity;
                         var service = await inventoryservice.SetAsync(item);
+                        System.Threading.Thread.Sleep(500);
                     }
                   
                 }
@@ -403,6 +421,7 @@ namespace ShopifyApp.Controllers
             try
             {
                 var client = new HttpClient();
+                client.Timeout = TimeSpan.FromMinutes(30);
                 CustomerDetailModel cdm = new CustomerDetailModel();
                 cdm.token = token;
                 cdm.shopifyurl = shopifyurl;
@@ -470,6 +489,7 @@ namespace ShopifyApp.Controllers
             try
             {
                 var client = new HttpClient();
+                client.Timeout = TimeSpan.FromMinutes(30);
                 OrderDetailModel model = new OrderDetailModel();
                 model.shopifyurl = shopifyurl;
                 model.token = token;

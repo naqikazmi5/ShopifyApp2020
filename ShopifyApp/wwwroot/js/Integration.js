@@ -21,7 +21,12 @@
             method: "POST",
             data: { storename: storename, duration: $("#duration").val(), ordersync: ordersync, productsync: productsync, customersync: customersync }
         }).done(function (response) {
-            alertify.success('Store data has been synced successfuly!');
+            if (response === "Location not found") {
+                alertify.error(response);
+            }
+            else {
+                alertify.success('Store data has been synced successfuly!');
+            }
         }).fail(function (jqXHR, textStatus) {
             alertify.error("Something went wrong! Try again later.");
         });

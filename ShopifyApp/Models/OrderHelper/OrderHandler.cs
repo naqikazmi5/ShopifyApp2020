@@ -22,17 +22,17 @@ namespace ShopifyApp.Models.OrderHelper
             {
                 var allOrders = new List<Order>();
                 var service = new OrderService(model.shopifyurl, model.token);
-                if (model.duration == 0)
-                {
-                    model.duration = 3;
-                }
+                //if (model.duration == 0)
+                //{
+                //    model.duration = 3;
+                //}
                 var page = await service.ListAsync(new OrderListFilter
                 {
                     Limit = 250,
                     FulfillmentStatus = "Unfulfilled",
-                    FinancialStatus = "paid"
-                    //CreatedAtMin = DateTime.Today.AddDays(-model.duration),
-                    //CreatedAtMax = DateTime.Now
+                    FinancialStatus = "paid",
+                    CreatedAtMin = DateTime.Today.AddDays(-model.duration),
+                    CreatedAtMax = DateTime.Now
 
                 });
 
